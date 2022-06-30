@@ -25,7 +25,7 @@ COSIGN_EXPERIMENTAL=1 cosign download attestation \
 **Docker Image Building Workflow**
 
 Registries:
-1. Dockerhub (pyrrhus/webtop-workbench)
+1. Dockerhub (pyrrhus/soc-admin-webtop)
 2. Azure Container Registry
 3. GitLab Container Registry (coming soon)
 4. GitHub Container Registry (coming soon)
