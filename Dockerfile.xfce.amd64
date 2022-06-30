@@ -1,0 +1,69 @@
+FROM --platform=amd64 linuxserver/webtop:amd64-ubuntu-xfce
+
+ARG SURICATA_VERSION=6.0.5
+ARG VERSION
+ENV VERSION $VERSION
+ARG BUILD_TIMESTAMP
+ENV BUILD_TIMESTAMP $BUILD_TIMESTAMP
+
+LABEL description="Custom Security Operation Center resource for Underground Nexus. Comes preinstalled with Suricata anbd GitKraken."
+
+VOLUME ["/var/run", "/var/lib/docker/volumes", "/nexus-bucket"]
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt update -y -qq && apt upgrade -y -qq && \
+    DEBIAN_FRONTEND=noninteractive apt install -y -qq \
+        libnotify4 \
+        xdg-utils \
+        apt-transport-https \
+        curl \
+        wget \
+        vim \
+        git \
+        libnss3 \
+        && rm -rf /var/lib/apt/lists/* 2> /dev/null
+
+RUN wget https://release.gitkraken.com/linux/gitkraken-amd64.deb && \
+    dpkg -i gitkraken-amd64.deb && \
+    rm gitkraken-amd64.deb
+
+RUN apt update -y \
+    && DEBIAN_FRONTEND=noninteractive \
+        apt install --assume-yes --no-install-recommends -qq libpcre3 \
+            libpcre3-dbg \
+            libpcre3-dev \
+            build-essential \
+            autoconf \
+            automake \
+            libtool \
+            libpcap-dev \
+            libnet1-dev \
+            libyaml-0-2 \
+            libyaml-dev \
+            zlib1g \
+            zlib1g-dev \
+            libcap-ng-dev \
+            libcap-ng0 \
+            make \
+            libmagic-dev \
+            libjansson-dev \
+            libjansson4 \
+            pkg-config \
+            gcc \
+            g++ \
+            rustc \
+            cargo \
+            python3-distutils \
+            python3-distutils-extra \
+            python3-yaml \
+            && rm -rf /var/lib/apt/lists/* 2> /dev/null
+
+RUN wget https://www.openinfosecfoundation.org/download/suricata-${SURICATA_VERSION}.tar.gz && \
+    tar xvzf suricata-${SURICATA_VERSION}.tar.gz && \
+    cd suricata-${SURICATA_VERSION} && ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var && \
+    make && make install-full 2> /dev/null
+
+RUN rm suricata-${SURICATA_VERSION}.tar.gz 2> /dev/null
+
+EXPOSE 2000
