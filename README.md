@@ -1,11 +1,11 @@
 ### Underground Nexus - Security Operation Center node
-> Current Version v0.1.0
+> Current Version v0.2.0
 
 Latest images
 
-`docker pull pyrrhus/soc-admin-webtop:amd64-latest`
+`docker pull phoenixvlabs/nexus-webtop-soc:amd64-latest`
 
-Signed images and its digest for verification. (v0.1.0)
+Signed images and its digest for verification. (v0.2.0)
 
 Each of these images has being signed with `cosign` and also has `SBOM` generated with `syft`. Lastly, `attestation` is attached but it is experimental.
 
